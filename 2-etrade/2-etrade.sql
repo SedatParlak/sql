@@ -1,0 +1,187 @@
+﻿----------------------AGGREGATE FUNCTIONS----------------------
+ 
+SELECT 
+  SUM(LINENET) TOTAL_PRICE, 
+  COUNT(*) TOTAL_PURCHASE, 
+  MIN(PRICE) MIN_PRICE, 
+  MAX(PRICE) MAX_PRICE, 
+  AVG(PRICE) AVG_PRICE 
+FROM 
+  SALES 
+WHERE 
+  BRANCH = 'Kocaeli Subesi'
+
+----------------------GROUP BY----------------------
+
+SELECT 
+  BRANCH,
+  SUM(LINENET) TOTAL_PRICE, 
+  COUNT(*) TOTAL_PURCHASE, 
+  MIN(PRICE) MIN_PRICE,
+  MAX(PRICE) MAX_PRICE,
+  AVG(PRICE) AVG_PRICE
+FROM 
+  SALES
+GROUP BY 
+  BRANCH
+ORDER BY 
+  TOTAL_PRICE DESC
+
+---------------------------------------------------
+
+SELECT 
+  TOP 10 BRANCH, 
+  SUM(LINENET) TOTAL_PRICE, 
+  COUNT(*) TOTAL_PURCHASE, 
+  MIN(PRICE) MIN_PRICE, 
+  MAX(PRICE) MAX_PRICE, 
+  AVG(PRICE) AVG_PRICE 
+FROM 
+  SALES 
+GROUP BY 
+  BRANCH 
+ORDER BY 
+  TOTAL_PRICE DESC
+
+---------------------------------------------------
+
+SELECT
+  BRANCH,
+  SUM(LINENET) TOTAL_LINENET,
+  MIN(LINENET) MIN_LINENET,
+  MAX(LINENET) MAX_LINENET,
+  AVG(LINENET) AVG_LINENET
+FROM 
+  SALES
+GROUP BY
+  BRANCH
+HAVING 
+  SUM(LINENET) > 50000
+ORDER BY 
+  TOTAL_LINENET DESC
+
+---------------------------------------------------
+
+SELECT
+  BRANCH,
+  DATE_,
+  SUM(LINENET) TOTAL_LINENET,
+  COUNT(*) TOTAL_TRANSACTION
+FROM 
+  SALES
+WHERE
+  BRANCH='Bursa Subesi' 
+  AND DATE_='2017-01-05'
+GROUP BY BRANCH, DATE_
+
+---------------------------------------------------
+
+SELECT
+  BRANCH,
+  DATE_,
+  SUM(LINENET) TOTAL_LINENET,
+  COUNT(*) TOTAL_TRANSACTION
+FROM 
+  SALES
+WHERE
+  BRANCH='Bursa Subesi' 
+GROUP BY BRANCH, DATE_
+ORDER BY DATE_
+
+---------------------------------------------------
+
+SELECT
+  BRANCH,
+  DATE_,
+  SUM(LINENET) TOTAL_LINENET,
+  COUNT(*) TOTAL_TRANSACTION
+FROM 
+  SALES 
+GROUP BY BRANCH, DATE_
+ORDER BY BRANCH, DATE_
+
+---------------------------------------------------
+
+SELECT 
+  DATE_,
+  BRANCH BRANCH,
+  SUM(LINENET) TOTAL_LINENET
+FROM 
+  SALES
+WHERE
+  DATE_='2017-01-05'
+GROUP BY
+  DATE_, BRANCH
+ORDER BY
+  SUM(LINENET) DESC
+
+---------------------------------------------------
+
+SELECT
+  CATEGORY_NAME1 CATEGORY_1,
+  BRAND,
+  SUM(LINENET) TOTAL_LINENET
+FROM 
+  SALES
+WHERE
+  CATEGORY_NAME1 IS NOT NULL
+GROUP BY 
+  CATEGORY_NAME1,
+  BRAND
+ORDER BY
+  CATEGORY_NAME1,
+  SUM(LINENET) DESC
+
+---------------------------------------------------
+
+SELECT
+  BRAND, 
+  CATEGORY_NAME1, 
+  CATEGORY_NAME2,
+  SUM(LINENET)
+FROM 
+  SALES
+WHERE
+  BRAND='ÜLKER'
+GROUP BY  
+  BRAND, CATEGORY_NAME1, CATEGORY_NAME2
+ORDER BY 
+  SUM(LINENET) DESC
+  
+ ---------------------------------------------------
+
+SELECT 
+  BRANCH, 
+  COUNT(DISTINCT CLIENTNAME) TOTAL_CUSTOMER
+FROM 
+  SALES
+GROUP BY 
+  BRANCH
+ORDER BY
+  COUNT(CLIENTNAME) DESC
+  
+---------------------------------------------------
+
+SELECT DISTINCT 
+  CLIENTNAME
+FROM 
+  SALES
+WHERE
+  BRANCH='Antalya Subesi'
+
+---------------------------------------------------
+
+SELECT 
+  CLIENTNAME,
+  COUNT(DISTINCT BRANCH)
+FROM 
+  SALES
+WHERE 
+  CLIENTNAME IS NOT NULL
+GROUP BY
+  CLIENTNAME
+ORDER BY
+  COUNT(DISTINCT BRANCH) DESC
+
+
+
