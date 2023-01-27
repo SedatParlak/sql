@@ -64,7 +64,7 @@ WHERE
   CITYID IN (SELECT ID FROM CITIES WHERE CITY IN ('İSTANBUL'))
 
 
--- Querry 6: Write the query that shows how many customers are in which city and order them
+-- Querry 6: Write the query that shows how many customers are in which city and order them in desending
 SELECT 
   CT.CITY,
   COUNT(CT.CITY) TOTAL_CUSTOMERS
@@ -75,3 +75,128 @@ GROUP BY
   CT.CITY
 ORDER BY
   2 DESC
+
+
+-- Querry 7: Write the query that shows cities have more than 10 customers and order them in descending
+SELECT 
+  CITY,
+  COUNT(CITY) TOTAL_CUSTOMERS
+FROM 
+  CUSTOMERS C
+  JOIN CITIES CT ON CT.ID=C.CITYID
+GROUP BY 
+  CITY
+HAVING
+  COUNT(CITY)>10
+ORDER BY 
+  TOTAL_CUSTOMERS DESC
+
+
+-- Querry 8: Write the query that shows how many female and male customers are in which city
+SELECT
+  CT.CITY,
+  C.GENDER,
+  COUNT(GENDER) TOTAL_CUSTOMERS
+FROM
+  CUSTOMERS C
+  JOIN CITIES CT ON CT.ID=C.CITYID
+GROUP BY
+  CITY,
+  GENDER
+ORDER BY
+  CITY,
+  GENDER
+
+
+-- Querry 9: Write the query that shows how many female and male customers are in which city as columns
+SELECT 
+  CITY,
+  (SELECT COUNT(*) FROM CUSTOMERS WHERE CUSTOMERS.CITYID=CT.ID AND GENDER='K') FEMALE_CUSTOMERS,
+  (SELECT COUNT(*) FROM CUSTOMERS WHERE CUSTOMERS.CITYID=CT.ID AND GENDER='E') MALE_CUSTOMERS
+FROM 
+  CITIES CT
+
+
+-- Querry 9: Add new columns called AGEGROUP in customers table. dype should be varchar(50)
+ALTER TABLE 
+  CUSTOMERS
+ADD 
+  AGEGROUP VARCHAR(50)
+
+
+-- Querry 10: Update AGEGROUP as 20-35, 36-45, 46-55, 56-65, 65+
+UPDATE 
+  CUSTOMERS
+SET 
+  AGEGROUP='20-35'
+WHERE 
+  DATEDIFF(YEAR, BIRTDATE, GETDATE()) BETWEEN 20 AND 35
+
+
+UPDATE 
+  CUSTOMERS
+SET
+  AGEGROUP='36-45'
+WHERE
+  DATEDIFF(YEAR, BIRTDATE, GETDATE()) BETWEEN 36 AND 45
+
+
+UPDATE
+  CUSTOMERS
+SET
+  AGEGROUP='46-55'
+WHERE
+  DATEDIFF(YEAR, BIRTDATE, GETDATE()) BETWEEN 46 AND 55
+
+
+UPDATE
+  CUSTOMERS
+SET
+  AGEGROUP='56-65'
+WHERE
+  DATEDIFF(YEAR, BIRTDATE, GETDATE()) BETWEEN 56 AND 65
+
+
+UPDATE
+  CUSTOMERS
+SET
+  AGEGROUP='65+'
+WHERE
+  DATEDIFF(YEAR, BIRTDATE, GETDATE())>65
+
+
+-- Querry 11: Write the query that shows how many customers are in which group without using AGEGROUP
+SELECT 
+  AGEGROUP2,
+  COUNT(AGEGROUP2) AS TOTAL_CUSTOMERS
+FROM
+	(
+	SELECT *,
+	  CASE
+		WHEN DATEDIFF(YEAR, BIRTDATE, GETDATE()) BETWEEN 20 AND 35 THEN '20-35'
+		WHEN DATEDIFF(YEAR, BIRTDATE, GETDATE()) BETWEEN 36 AND 45 THEN '36-45'
+		WHEN DATEDIFF(YEAR, BIRTDATE, GETDATE()) BETWEEN 46 AND 55 THEN '46-55'
+		WHEN DATEDIFF(YEAR, BIRTDATE, GETDATE()) BETWEEN 56 AND 65 THEN '56-65'
+		WHEN DATEDIFF(YEAR, BIRTDATE, GETDATE())>65 THEN '65+'
+	  END 
+	  AGEGROUP2
+	FROM
+	  CUSTOMERS
+	  ) TMB
+GROUP BY AGEGROUP2 
+ORDER BY TOTAL_CUSTOMERS DESC
+
+
+-- Querry 12: Write the query that shows customers live in Istanbul but district is not 'Kadıköy'
+SELECT 
+  C.*,
+  CT.CITY,
+  D.DISTRICT
+FROM 
+  CUSTOMERS AS C
+  JOIN CITIES CT ON CT.ID=C.CITYID
+  JOIN DISTRICTS D ON D.ID=C.DISTRICTID
+WHERE
+  CITY='İSTANBUL'
+  AND DISTRICT<>'KADIKÖY'
+
