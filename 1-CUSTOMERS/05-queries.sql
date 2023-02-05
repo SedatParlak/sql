@@ -200,3 +200,69 @@ WHERE
   CITY='İSTANBUL'
   AND DISTRICT<>'KADIKÖY'
 
+
+-- Querry 13: Write the query that shows customers whose cıty table's is null
+SELECT
+  *
+FROM 
+  CUSTOMERS AS C
+  JOIN CITIES AS CT ON CT.ID=C.CITYID
+WHERE CT.CITY IS NULL
+
+
+-- Querry 14: Write the query that shows customers phones operators as OPERATOR1 and OPERATOR2
+SELECT
+  CUSTOMERNAME,
+  TELNR1,
+  TELNR2,
+  LEFT(TELNR1, 5) AS OPERATOR1,
+  LEFT(TELNR2, 5) AS OPERATOR2
+FROM
+  CUSTOMERS
+
+
+-- Option 2
+SELECT 
+  CUSTOMERNAME,
+  TELNR1,
+  TELNR2,
+  SUBSTRING(TELNR1, 2, 3) AS OPERATOR1,
+  SUBSTRING(TELNR2, 2, 3) AS OPERATOR2
+FROM 
+  CUSTOMERS
+
+
+-- Querry 15: Write the query that shows total customers of district and order them in descending
+SELECT 
+  CT.CITY,
+  D.DISTRICT,
+  COUNT(D.DISTRICT) AS CUSTOMERCOUNT
+FROM 
+  CUSTOMERS AS C
+  JOIN CITIES AS CT ON CT.ID=C.CITYID
+  JOIN DISTRICTS AS D ON D.ID=C.DISTRICTID
+GROUP BY 
+  CT.CITY, D.DISTRICT
+ORDER BY 
+  CT.CITY,
+  CUSTOMERCOUNT DESC
+
+
+-- Querry 16: Write the query that shows customer birth date as a weekday
+SELECT
+  CUSTOMERNAME,
+  BIRTDATE,
+  DATENAME(weekday, BIRTDATE) AS BIRTDAY
+FROM
+  CUSTOMERS
+
+
+-- Querry 17: Write the query that shows customer birth date is today
+SELECT
+  CUSTOMERNAME,
+  BIRTDATE,
+  DATENAME(weekday, BIRTDATE)
+FROM
+  CUSTOMERS
+WHERE 
+  BIRTDATE=GETDATE()
