@@ -1,0 +1,58 @@
+﻿--Write a query that shows total sale for each city
+SELECT 
+  CITY,
+  SUM(LINETOTAL) AS TOTAL_SALE
+FROM 
+  SALEORDERS
+GROUP BY
+  CITY
+ORDER BY
+  CITY
+
+
+--Write a query that shows montly total sale for each city
+SELECT 
+  CITY,
+  MONTH_,
+  SUM(LINETOTAL) AS TOTAL_SALE
+FROM 
+  SALEORDERS
+GROUP BY
+  CITY,
+  MONTH_
+ORDER BY
+  CITY
+
+--Update days
+UPDATE SALEORDERS SET DAYOFWEEK_='01_Pazartesi' WHERE DAYOFWEEK_='Pazartesi'
+UPDATE SALEORDERS SET DAYOFWEEK_='02_Salı' WHERE DAYOFWEEK_='Salı'
+UPDATE SALEORDERS SET DAYOFWEEK_='03_Çarşamba' WHERE DAYOFWEEK_='Çarşamba'
+UPDATE SALEORDERS SET DAYOFWEEK_='04_Perşembe' WHERE DAYOFWEEK_='Perşembe'
+UPDATE SALEORDERS SET DAYOFWEEK_='05_Cuma' WHERE DAYOFWEEK_='Cuma'
+UPDATE SALEORDERS SET DAYOFWEEK_='06_Cumartesi' WHERE DAYOFWEEK_='Cumartesi'
+UPDATE SALEORDERS SET DAYOFWEEK_='07_Pazar' WHERE DAYOFWEEK_='Pazar'
+
+
+--Write a query that shows daily total sale for each city
+SELECT
+  CITY,
+  DAYOFWEEK_,
+  SUM(LINETOTAL) AS TOTAL_SALE
+FROM
+  SALEORDERS
+GROUP BY
+  CITY,
+  DAYOFWEEK_
+ORDER BY
+  CITY,
+  DAYOFWEEK_
+
+
+--Write a query that shows daily total sale for each city as column
+SELECT
+  *
+FROM
+  SALEORDERS
+
+
+  
