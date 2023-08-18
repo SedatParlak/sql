@@ -1,0 +1,123 @@
+--1) Write a query that shows how many customer we have?
+SELECT  
+  COUNT(DISTINCT MASTER_ID) AS TOTAL_CUSTOMERS
+FROM 
+  CUSTOMERS
+
+--2) Write a query that return the total number of purchase and income
+SELECT 
+  SUM(ORDER_NUM_TOTAL_OFFLINE)+SUM(ORDER_NUM_TOTAL_ONLINE) AS TOTAL_PRUCHASE,
+  FORMAT((SUM(CUSTOMER_VALUE_TOTAL_OFFLINE)+SUM(CUSTOMER_VALUE_TOTAL_ONLINE)), '###,###,###.00') AS TOTAL_INCOME
+FROM 
+  CUSTOMERS
+
+--3) Write a query that shows the average income for per purchase
+ALTER TABLE 
+  CUSTOMERS 
+ADD 
+  TOTAL_ORDER_NUM INT, 
+  TOTAL_VALUE FLOAT
+
+UPDATE CUSTOMERS
+SET TOTAL_ORDER_NUM=ORDER_NUM_TOTAL_OFFLINE+ORDER_NUM_TOTAL_ONLINE
+
+UPDATE CUSTOMERS
+SET TOTAL_VALUE=CUSTOMER_VALUE_TOTAL_OFFLINE+CUSTOMER_VALUE_TOTAL_ONLINE
+
+SELECT 
+  ROUND(SUM(TOTAL_VALUE)/SUM(TOTAL_ORDER_NUM), 2) AS AVG_INCOME
+FROM 
+  CUSTOMERS
+
+--4) Write a query that return the total income and number of purchases made through the last_order_channel
+SELECT 
+  LAST_ORDER_CHANNEL,
+  ROUND(SUM(TOTAL_VALUE), 2) AS TOTAL_INCOME,
+  ROUND(SUM(TOTAL_ORDER_NUM), 2) AS TOTAL_PURCHASE
+FROM 
+  CUSTOMERS
+GROUP BY
+  LAST_ORDER_CHANNEL
+
+--5) Write a query that return the total income based on store type
+SELECT 
+  STORE_TYPE,
+  FORMAT(SUM(TOTAL_VALUE), '###,###,###,###.00')
+FROM
+  CUSTOMERS
+GROUP BY
+  STORE_TYPE
+
+--6) Write a query that return total income based on first order date
+SELECT 
+  YEAR(FIRST_ORDER_DATE) AS YEAR,
+  SUM(TOTAL_ORDER_NUM) AS TOTAL_PURCHASE
+FROM 
+  CUSTOMERS
+GROUP BY
+  YEAR(FIRST_ORDER_DATE)
+
+--7) Write a query that return average income based on last order channel
+SELECT 
+  LAST_ORDER_CHANNEL,
+  FORMAT(SUM(TOTAL_VALUE), '###,###,###,###.00') AS TOTAL_INCOME
+FROM 
+  CUSTOMERS
+GROUP BY
+  LAST_ORDER_CHANNEL
+
+--8) Write a query that return the most populer category in the last 12 months
+SELECT TOP 1
+  INTERESTED_CATEGORY,
+  COUNT(*) AS TOTAL_PUCHASE
+FROM 
+  CUSTOMERS
+GROUP BY
+  INTERESTED_CATEGORY
+ORDER BY 
+  2 DESC
+
+--9) Write a query that return the most popular store type
+SELECT TOP 1
+  STORE_TYPE,
+  COUNT(*) AS TOTAL_PUCHASE
+FROM 
+  CUSTOMERS
+GROUP BY
+  STORE_TYPE
+ORDER BY 
+  2 DESC
+
+--10) Write a query that return the top customer
+SELECT
+  TOP 1
+  MASTER_ID,
+  TOTAL_ORDER_NUM
+FROM 
+  CUSTOMERS
+ORDER BY
+  TOTAL_ORDER_NUM DESC
+
+--11) Write a query that return the top customer's average income and purchase frequency based on total order
+SELECT
+  TOP 1
+  MASTER_ID,
+  TOTAL_ORDER_NUM,
+  TOTAL_VALUE,
+  DATEDIFF(DAY, FIRST_ORDER_DATE, LAST_ORDER_DATE) AS TOTAL_DAY,
+  ROUND(TOTAL_VALUE/TOTAL_ORDER_NUM, 2) AS AVERAGE_INCOME,
+  ROUND(CAST(DATEDIFF(DAY, FIRST_ORDER_DATE, LAST_ORDER_DATE) AS FLOAT)/TOTAL_ORDER_NUM, 2) AS PURCCHASE_FREQUENCY
+FROM 
+  CUSTOMERS
+ORDER BY
+  TOTAL_ORDER_NUM DESC
+
+--12) Write a query that return the top 100 customer's purchase frequency based on total order
+SELECT 
+  TOP 100
+  MASTER_ID,
+  ROUND(CAST(DATEDIFF(DAY, FIRST_ORDER_DATE, LAST_ORDER_DATE) AS FLOAT)/TOTAL_ORDER_NUM, 2) AS PURCCHASE_FREQUENCY
+FROM 
+  CUSTOMERS
+ORDER BY
+  2 DESC
